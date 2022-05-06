@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import joi from 'joi';
 
-dotenv.config()
+dotenv.config();
 
 const app = express();
 app.use(json());
