@@ -75,6 +75,9 @@ app.post('/signin', async (req, res) => {
         const rightPassword = bcrypt.compareSync(password, user.password);
         if(rightPassword){
             const token = uuid();
+            
+            await db.collection('session').insertOne({ token, userId: user._id });
+            
             return res.send(token);
         }
         
