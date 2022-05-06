@@ -28,9 +28,16 @@ app.post('/signup', (req, res) => {
         return res.sendStatus(422);
     }
     
+     //baixar lib bcrypt
+    
     try{
         
-        await db.colletion('users').insertOne(user);
+        const passwordHashed = bcrypt.hashSync(user.password, 10);
+        
+        await db.colletion('users').insertOne({
+            ...user,
+            password: passwordHashed
+        });
         res.sendStatus(201);
     
     } catch(e){
@@ -41,21 +48,29 @@ app.post('/signup', (req, res) => {
 });
 
 app.post('/signin', (req, res) => {
-    const loginData = req.body;
+    const { login, password } = req.body;
     
     const loginSchema = joi.object{(
         email: joi.string().required(),
         password: joi.string().required()
     )}
     
-    const validation = loginSchema.validate(loginData);
+    const validation = loginSchema.validate({ login, password });
     if(validation.error){
         return sendStatus(401);
     }
     
     try{
-        await db.colletcion('users').findOne(login);
-        res.sendStatus(201);
+                
+        const user = await db.colletcion('users').findOne({ email });
+        
+        if(!user){
+            return sendStatus(401);
+        }
+        
+        const rightPassword = bcrypt.compareSync(password, user.password)
+        
+        res.sendStatus(200);
     
     } catch(e){
         console.log(e);
