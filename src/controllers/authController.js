@@ -1,26 +1,10 @@
-import express, { json} from "express";
-import { MongoClient } from "mongodb";
-import chalk from "chalk";
-import cors from "cors";
-import dotenv from "dotenv";
 import joi from 'joi';
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
-dotenv.config()
-const database = process.env.MONGO_URI;
+import db from "../db.js";
 
-const app = express();
-app.use(json());
-app.use(cors());
-
-const mongoClient = new MongoClient(database);
-let db;
-mongoClient.connect(() => {
-    db = mongoClient.db('my-wallet');
-});
-
-app.post('/sign-up', async (req, res) => {
+export async function setSignUp(req, res){
     const user = req.body;
     
     const signUpSchema = joi.object({
@@ -49,9 +33,9 @@ app.post('/sign-up', async (req, res) => {
         res.sendStatus(500);
     }
     
-});
+}
 
-app.post('/sign-in', async (req, res) => {
+export async function setSignIn (req, res){
     const { email, password } = req.body;
     
     const loginSchema = joi.object({
@@ -83,23 +67,9 @@ app.post('/sign-in', async (req, res) => {
         
         res.sendStatus(200);
     
-    } catch(e){
+    } catch(error){
         console.log(e);
         res.sendStatus(500);
     }
 
-});
-
-/* app.get('items', async (req, res) => {
-    const authorization = req.headers.authorization;
-    const token = authorization?.replace('Bearer ', '');
-    
-    if(!token){
-        return res.sendStatus(401);
-    }
-}) */
-
-
-app.listen(5000, () => {
-    console.log(chalk.blue.bold('Running on http://localhost:5000'));
-});
+}
