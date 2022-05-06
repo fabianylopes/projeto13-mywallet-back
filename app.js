@@ -8,13 +8,17 @@ import joi from 'joi';
 dotenv.config()
 const database = process.env.MONGO_URI;
 
+const app = express();
+app.use(json());
+app.use(cors());
+
 const mongoClient = new MongoClient(database);
 let db;
 mongoClient.connect(() => {
     db = mongoClient.db('my-wallet');
 });
 
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     const user = req.body;
     
     const signUpSchema = joi.object{(
@@ -28,7 +32,7 @@ app.post('/signup', (req, res) => {
         return res.sendStatus(422);
     }
     
-     //baixar lib bcrypt
+     //baixar lib bcrypt, uuid(token)
     
     try{
         
@@ -47,7 +51,7 @@ app.post('/signup', (req, res) => {
     
 });
 
-app.post('/signin', (req, res) => {
+app.post('/signin', async (req, res) => {
     const { login, password } = req.body;
     
     const loginSchema = joi.object{(
@@ -68,7 +72,11 @@ app.post('/signin', (req, res) => {
             return sendStatus(401);
         }
         
-        const rightPassword = bcrypt.compareSync(password, user.password)
+        const rightPassword = bcrypt.compareSync(password, user.password);
+        if(rightPassword){
+            const token = uuid();
+            return res.send(token);
+        }
         
         res.sendStatus(200);
     
@@ -79,9 +87,15 @@ app.post('/signin', (req, res) => {
 
 });
 
-const app = express();
-app.use(json());
-app.use(cors());
+app.get('items', async (req, res) => {
+    const authorization = req.headers.authorization;
+    const token = authorization?.replace('Bearer ', '');
+    
+    if(!token){
+        return res.sendStatus(401);
+    }
+})
+
 
 app.listen(5000, () => {
     console.log(chalk.blue.bold('Running on http://localhost:5000'));
