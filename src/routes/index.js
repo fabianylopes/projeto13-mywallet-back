@@ -1,11 +1,11 @@
 import { Router } from "express";
 
 import authRouter from "./authRoute.js";
-import itemRouter from "./itemRoute.js";
+import transactionsRoute from "./transactionsRoute.js";
 
 const router = Router();
 
 router.use(authRouter);
-router.use(itemRouter);
+router.use(transactionsRoute);
 
 export default router;

@@ -16,8 +16,8 @@ export async function setSignUp(req, res){
         });
         res.sendStatus(201);
     
-    } catch(e){
-        console.log(e);
+    } catch(error){
+        console.log(error);
         res.sendStatus(500);
     }
     
@@ -46,7 +46,7 @@ export async function setSignIn (req, res){
         res.sendStatus(200);
     
     } catch(error){
-        console.log(e);
+        console.log(error);
         res.sendStatus(500);
     }
 
