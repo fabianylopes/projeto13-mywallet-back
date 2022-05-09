@@ -11,5 +11,5 @@ app.use(json());
 app.use(router);
 
 app.listen(process.env.PORT, () => {
-    console.log(chalk.blue.bold('Running on http://localhost:5000'));
+    console.log(chalk.blue.bold(`Running on http://localhost:${process.env.PORT}`));
 });

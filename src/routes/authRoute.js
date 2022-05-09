@@ -7,6 +7,6 @@ import validateSignInSchemaMiddleware from "../middlewares/validateSignInSchemaM
 const authRouter = Router();
 
 authRouter.post('/sign-up', validateSignUpSchemaMiddleware, setSignUp);
-authRouter.post('/sign-in', validateSignInSchemaMiddleware, setSignIn);
+authRouter.post('/', validateSignInSchemaMiddleware, setSignIn);
 
 export default authRouter;
