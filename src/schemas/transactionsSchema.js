@@ -1,7 +1,8 @@
 import joi from 'joi';
 
 const transactionsSchema = joi.object({
-    value: joi.string().required(),
+    type: joi.string().valid('entry', 'out'),
+    value: joi.number().required(),
     description: joi.string().required()
 });
 

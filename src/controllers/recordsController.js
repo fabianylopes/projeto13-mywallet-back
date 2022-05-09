@@ -1,18 +1,25 @@
-import db from "../db.js";
-
 export async function records(req, res){
     const { user } = res.locals;
 
-
     try {
-        
-        const transactions = await db.collection('users')
+        const records = user.transaction;
+        let sum = 0;
 
-        res.send(user);
+        if(records.length === 0){
+            return res.send({records, sum});
+        }else{
+            records.forEach((r) => {
+                if(r.type === 'entry'){
+                    sum += parseFloat(r.value);
+                }else if(r.type === 'out'){
+                    sum -= parseFloat(r.value);
+                }
+            });
+            return res.send({records, sum});
+        }
         
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
 }
-

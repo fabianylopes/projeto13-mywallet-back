@@ -1,9 +1,11 @@
 import signUpSchema from "../schemas/signUpSchema.js";
 
 export default function validateSignUpSchemaMiddleware(req, res, next){
-    const validation = signUpSchema.validate(req.body);
+    const register = req.body;
     
+    const validation = signUpSchema.validate(register);
     if(validation.error){
+        console.log('here')
         return res.sendStatus(422);
     }
 

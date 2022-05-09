@@ -9,7 +9,7 @@ const transactionsRoute = Router();
 
 transactionsRoute.use(validateTokenMiddleware);
 transactionsRoute.get('/records', records)
-transactionsRoute.post('/transactions', transactions);
+transactionsRoute.post('/transactions', validateTransactionsMiddleware, transactions);
 
 
 export default transactionsRoute;

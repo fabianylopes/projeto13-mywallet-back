@@ -10,8 +10,10 @@ export async function setSignUp(req, res){
         const passwordHashed = bcrypt.hashSync(user.password, 10);
         
         await db.collection('users').insertOne({
-            ...user,
-            password: passwordHashed
+            name: user.name,
+            email: user.email,
+            password: passwordHashed,
+            transaction: []
         });
         res.sendStatus(201);
     
@@ -29,12 +31,14 @@ export async function setSignIn (req, res){
         return res.sendStatus(401);
     }
     
+    const name = user.name;
+    
     const rightPassword = bcrypt.compareSync(password, user.password);
     if(rightPassword){
         const token = uuid();
         
         await db.collection('session').insertOne({ token, userId: user._id});
-        return res.send(token);
+        return res.send({token, name});
     }
         
     res.sendStatus(401);

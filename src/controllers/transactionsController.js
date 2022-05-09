@@ -21,8 +21,7 @@ export async function transactions(req, res){
                 $push: {transaction: newTransaction}
             }
         );
-        console.log(newTransaction)
-        console.log(user)
+
         res.sendStatus(201);
 
     } catch (error) {
